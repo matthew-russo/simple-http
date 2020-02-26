@@ -1,19 +1,11 @@
-# first of all import the socket library 
+from enum import Enum
 import socket                
   
-# next create a socket object 
 s = socket.socket()          
 print('Socket successfully created')
   
-# reserve a port on your computer in our 
-# case it is 12345 but it can be anything 
 port = 12345                
   
-# Next bind to the port 
-# we have not typed any ip in the ip field 
-# instead we have inputted an empty string 
-# this makes the server listen to requests  
-# coming from other computers on the network 
 s.bind(('', port))         
 print('socket binded to {}'.format(port))
   
@@ -21,16 +13,74 @@ print('socket binded to {}'.format(port))
 s.listen(5)
 print('socket is listening')
   
-# a forever loop until we interrupt it or  
-# an error occurs 
 while True: 
-   # Establish connection with client. 
-   c, addr = s.accept()      
-   print('Got connection from: {}'.format(addr)) 
-  
-   # send a thank you message to the client.  
-   c.send(b'Thank you for connecting') 
-  
-   # Close the connection with the client 
-   c.close() 
+    conn, addr = s.accept()      
+    data = receiveAll(conn)
+    http_request = HttpRequest.parse(data)
+    handle(http_request)
+    conn.close()
 
+# https://tools.ietf.org/html/rfc2616#section-5
+# Request       = Request-Line              ; Section 5.1
+#                 *(( general-header        ; Section 4.5
+#                  | request-header         ; Section 5.3
+#                  | entity-header ) CRLF)  ; Section 7.1
+#                 CRLF
+#                 [ message-body ]          ; Section 4.3
+class HttpRequest:
+
+    
+
+# 5.1 Request-Line
+# 
+#    The Request-Line begins with a method token, followed by the
+#    Request-URI and the protocol version, and ending with CRLF. The
+#    elements are separated by SP characters. No CR or LF is allowed
+#    except in the final CRLF sequence.
+# 
+#         Request-Line   = Method SP Request-URI SP HTTP-Version CRLF
+class HttpRequestLine:
+    
+
+# Sections 9.2 - 9.9
+class HttpMethod(Enum):
+    OPTIONS = auto()
+    GET     = auto()
+    HEAD    = auto()
+    POST    = auto()
+    PUT     = auto()
+    DELETE  = auto()
+    TRACE   = auto()
+    CONNECT = auto()
+
+class HttpRequestParser:
+
+    def parse():
+        print('unimplemented parse')
+
+    def _request_line():
+        print('unimplemented _request_line')
+
+    def _method():
+        print('unimplemented _method')
+
+    def _request_uri():
+        print('unimplemented _request_uri')
+
+    def _http_version():
+        print('unimplemented _http_version')
+
+    def _headers():
+        print('unimplemented _headers')
+
+    def _general_header():
+        print('unimplemented _general_header')
+
+    def _request_header():
+        print('unimplemented _request_header')
+
+    def _entity_header():
+        print('unimplemented _entity_header')
+
+    def _body():
+        print('unimplemented _body')
