@@ -1,3 +1,5 @@
+import sys
+
 # https://tools.ietf.org/html/rfc2616#section-5
 # Request       = Request-Line              ; Section 5.1
 #                 *(( general-header        ; Section 4.5
@@ -32,33 +34,115 @@ class HttpMethod(Enum):
     CONNECT = auto()
 
 class HttpRequestParser:
+    def parse(input_: str) -> HttpRequest:
+        self.input = input_
+        self.current = 0
+        request_line = _request_line()
+        headers = _headers()
+        body = _body()
 
-    def parse():
-        print('unimplemented parse')
+    def _request_line(self) -> RequestLine:
+        method = self._method()
+        request_uri = self.chomp_word()
+        http_version = self._http_version()
 
-    def _request_line():
-        print('unimplemented _request_line')
+    def _method(self):
+        word = self.chomp_word()
 
-    def _method():
-        print('unimplemented _method')
-
-    def _request_uri():
-        print('unimplemented _request_uri')
+        try:
+            method = HttpMethod[word]
+        except KeyError:
+            raise InvalidHttpMethod(word)
 
     def _http_version():
-        print('unimplemented _http_version')
+        # TODO -> this should be an enum
+        return self.chomp_word()
 
     def _headers():
-        print('unimplemented _headers')
+        panic('unimplemented _headers')
 
     def _general_header():
-        print('unimplemented _general_header')
+        panic('unimplemented _general_header')
 
     def _request_header():
-        print('unimplemented _request_header')
+        panic('unimplemented _request_header')
 
     def _entity_header():
-        print('unimplemented _entity_header')
+        panic('unimplemented _entity_header')
+
+
+    # message-header = field-name ":" [ field-value ]
+    # field-name     = token
+    # field-value    = *( field-content | LWS )
+    # field-content  = <the OCTETs making up the field-value
+    #                  and consisting of either *TEXT or combinations
+    #                  of token, separators, and quoted-string>
+    def _message_header():
+        let word = self.chomp_until(':')
+        panic('unimplemented _message_header')
 
     def _body():
-        print('unimplemented _body')
+        panic('unimplemented _body')
+
+    def chomp_until(self, delim: str) -> str:
+        word = ''
+        while self.current < len(self.input) and self.input[self.current].isspace() != delim:
+            word += self.input[self.current]
+            self.current += 1
+
+        return word
+
+
+    def chomp_word(self) -> str:
+        word = ''
+        while self.current < len(self.input) and not self.input[self.current].isspace():
+            word += self.input[self.current]
+            self.current += 1
+
+        return word
+
+    def chomp_rest(self) -> str:
+        word = self.input[self.current:]
+        self.current = len(self.input)
+        return word
+
+
+
+def panic(msg: str):
+    print(msg)
+    sys.exit(1)
+
+def sample_get_request():
+    return """GET /hello.htm HTTP/1.1
+User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)
+Host: www.tutorialspoint.com
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+Connection: Keep-Alive"""
+
+def sample_post_request():
+    return """POST /cgi-bin/process.cgi HTTP/1.1
+User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)
+Host: www.tutorialspoint.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: length
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+Connection: Keep-Alive
+
+licenseID=string&content=string&/paramsXML=string"""
+
+def sample_xml_post_request():
+    return """POST /cgi-bin/process.cgi HTTP/1.1
+User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)
+Host: www.tutorialspoint.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+Connection: Keep-Alive
+
+<?xml version="1.0" encoding="utf-8"?>
+<string xmlns="http://clearforest.com/">string</string>"""
+
+
