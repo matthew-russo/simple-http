@@ -14,7 +14,9 @@ class HttpServer:
         while True: 
             conn, addr = s.accept()
             http_request = self.parse_request(conn)
-            handle(http_request)
+            http_response = framework.handle(http_request)
+            to_write = http_response.marshal()
+            # socket_write(to_write)
             conn.close()
 
     def parse_request(conn: Connection) -> HttpRequest:

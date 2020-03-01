@@ -33,6 +33,47 @@ class HttpMethod(Enum):
     TRACE   = auto()
     CONNECT = auto()
 
+# OCTET          = <any 8-bit sequence of data>
+# CHAR           = <any US-ASCII character (octets 0 - 127)>
+# UPALPHA        = <any US-ASCII uppercase letter "A".."Z">
+# LOALPHA        = <any US-ASCII lowercase letter "a".."z">
+# ALPHA          = UPALPHA | LOALPHA
+# DIGIT          = <any US-ASCII digit "0".."9">
+# CTL            = <any US-ASCII control character
+#                  (octets 0 - 31) and DEL (127)>
+# CR             = <US-ASCII CR, carriage return (13)>
+# LF             = <US-ASCII LF, linefeed (10)>
+# SP             = <US-ASCII SP, space (32)>
+# HT             = <US-ASCII HT, horizontal-tab (9)>
+# <">            = <US-ASCII double-quote mark (34)>
+
+# CRLF           = CR LF
+
+# LWS            = [CRLF] 1*( SP | HT )
+
+# token          = 1*<any CHAR except CTLs or separators>
+
+# separators     = "(" | ")" | "<" | ">" | "@"
+#                | "," | ";" | ":" | "\" | <">
+#                | "/" | "[" | "]" | "?" | "="
+#                | "{" | "}" | SP | HT
+
+# comment        = "(" *( ctext | quoted-pair | comment ) ")"
+# ctext          = <any TEXT excluding "(" and ")">
+
+# quoted-string  = ( <"> *(qdtext | quoted-pair ) <"> )
+# qdtext         = <any TEXT except <">>
+# quoted-pair    = "\" CHAR
+
+# HTTP-Version   = "HTTP" "/" 1*DIGIT "." 1*DIGIT
+
+# message-header = field-name ":" [ field-value ]
+# field-name     = token
+# field-value    = *( field-content | LWS )
+# field-content  = <the OCTETs making up the field-value
+#                  and consisting of either *TEXT or combinations
+#                  of token, separators, and quoted-string>
+
 class HttpRequestParser:
     def parse(input_: str) -> HttpRequest:
         self.input = input_
@@ -59,24 +100,60 @@ class HttpRequestParser:
         return self.chomp_word()
 
     def _headers():
+        chomp_
+        chomp(':')
         panic('unimplemented _headers')
 
     def _general_header():
+#   Cache-Control            ; Section 14.9
+# | Connection               ; Section 14.10
+# | Date                     ; Section 14.18
+# | Pragma                   ; Section 14.32
+# | Trailer                  ; Section 14.40
+# | Transfer-Encoding        ; Section 14.41
+# | Upgrade                  ; Section 14.42
+# | Via                      ; Section 14.45
+# | Warning                  ; Section 14.46
+
         panic('unimplemented _general_header')
 
     def _request_header():
+#   Accept                   ; Section 14.1
+# | Accept-Charset           ; Section 14.2
+# | Accept-Encoding          ; Section 14.3
+# | Accept-Language          ; Section 14.4
+# | Authorization            ; Section 14.8
+# | Expect                   ; Section 14.20
+# | From                     ; Section 14.22
+# | Host                     ; Section 14.23
+# | If-Match                 ; Section 14.24
+# | If-Modified-Since        ; Section 14.25
+# | If-None-Match            ; Section 14.26
+# | If-Range                 ; Section 14.27
+# | If-Unmodified-Since      ; Section 14.28
+# | Max-Forwards             ; Section 14.31
+# | Proxy-Authorization      ; Section 14.34
+# | Range                    ; Section 14.35
+# | Referer                  ; Section 14.36
+# | TE                       ; Section 14.39
+# | User-Agent               ; Section 14.43
         panic('unimplemented _request_header')
 
     def _entity_header():
+#   Allow                    ; Section 14.7
+# | Content-Encoding         ; Section 14.11
+# | Content-Language         ; Section 14.12
+# | Content-Length           ; Section 14.13
+# | Content-Location         ; Section 14.14
+# | Content-MD5              ; Section 14.15
+# | Content-Range            ; Section 14.16
+# | Content-Type             ; Section 14.17
+# | Expires                  ; Section 14.21
+# | Last-Modified            ; Section 14.29
+# | extension-header
         panic('unimplemented _entity_header')
 
 
-    # message-header = field-name ":" [ field-value ]
-    # field-name     = token
-    # field-value    = *( field-content | LWS )
-    # field-content  = <the OCTETs making up the field-value
-    #                  and consisting of either *TEXT or combinations
-    #                  of token, separators, and quoted-string>
     def _message_header():
         let word = self.chomp_until(':')
         panic('unimplemented _message_header')
